@@ -325,18 +325,41 @@ const map = [
 ];
 
 // part 1
-let trees = [];
-const countTrees = map.reduce((acc, item, currentIndex) => {
-  if (item[0][acc] === "#") {
-    trees.push(item[0][acc]);
-  }
-  let newIndex = acc + 3;
-  if (newIndex >= item[0].length) {
-    const difference = newIndex - item[0].length;
-    newIndex = 0 + difference;
-  }
+const slopes = [
+  { right: 1, down: 1 },
+  { right: 3, down: 1 },
+  { right: 5, down: 1 },
+  { right: 7, down: 1 },
+  { right: 1, down: 2 },
+];
 
-  return newIndex;
-}, 0);
+const countTrees = () => {
+  let collectiveTrees = [];
+  slopes.forEach(({ right, down }) => {
+    let individualSlopetrees = [];
+    map.reduce((acc, item, currentIndex) => {
+      const isOdd = (num) => num % 2;
+      let newIndex = acc;
+      if (down > 1 && isOdd(currentIndex)) {
+        return newIndex;
+      }
+      newIndex += right;
 
-console.log(trees.length);
+      if (item[0][acc] === "#") {
+        individualSlopetrees.push(item[0][acc]);
+      }
+      if (newIndex >= item[0].length) {
+        const difference = newIndex - item[0].length;
+        newIndex = 0 + difference;
+      }
+      return newIndex;
+    }, 0);
+    collectiveTrees.push(individualSlopetrees);
+  });
+  return collectiveTrees;
+};
+
+const completeTreeCount = countTrees().map((item) => item.length);
+const multipliedTreeCount = completeTreeCount.reduce(
+  (acc, number) => acc * number
+);
