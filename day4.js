@@ -1,73 +1,112 @@
 let fs = require("fs");
 
-// const day3Example = fs
-//   .readFileSync("input.txt")
-//   .toString()
-//   .split("\n\n")
-//   .map((s) => s.replace(/\h/, ","));
-//   .filter((s) => s.length > 0);
-const text = fs.readFileSync("example.txt").toString();
-console.log(text);
-// read text
-// wrap it in an array
-// at the start of any line that follows a double line break, put a ["
-// at the end of a line before a double line break, put a "],
-// in every space, put a ", "
+const text = fs.readFileSync("example.txt").toString().split(/\/n$/);
+const getGroupedInfo = text[0].replace(/\n\n/g, ",");
+const getIndividualStrings = getGroupedInfo.split(",");
 
-const example = [
-  [
-    "ecl: gry",
-    "pid: 860033327",
-    "eyr: 2020",
-    "hcl: #fffffd",
-    "byr: 1937",
-    "iyr: 2017",
-    "cid: 147",
-    "hgt: 183cm",
-  ],
-  [
-    "iyr: 2013",
-    "ecl: amb",
-    "cid: 350",
-    "eyr: 2023",
-    "pid: 028048884",
-    "hcl: #cfa07d",
-    "byr: 1929",
-  ],
-  [
-    "hcl: #ae17e1",
-    "iyr: 2013",
-    "eyr: 2024",
-    "ecl: brn",
-    "pid: 760753108",
-    "byr: 1931",
-    "hgt: 179cm",
-  ],
-  [
-    "hcl: #cfa07d",
-    "eyr: 025",
-    "pid: 66559648",
-    "iyr: 011",
-    "ecl: brn",
-    "hgt: 59in",
-  ],
-];
+const replaceSpaces = getIndividualStrings.map((s) => {
+  return s.replace(/[ ]/g, ",");
+});
 
-// to filter, I need to replace the spaces with comas,
-// then wrap the string in an array
-// then, search each entry, find any that are not numbers and stringify them
+const formattedData = replaceSpaces.map((s) => {
+  return s.replace(/\n/g, ",");
+});
 
-// if the length is 8, push into good array
-// if the number is less than 7, do nothing
-// if the length is 7, filter and check that on string contains cid
-// if it does, then its invalid
+const passportList = formattedData.map((s) => s.split(","));
 
-const countValidPassports = example.filter((p) => {
+const countValidPassports = passportList.filter((p) => {
   if (p.length === 8) return p;
   if (p.length < 7) return;
   if (p.length === 7) {
-    const test = p.filter((item) => item.includes("cid"));
-    if (!test.length) return p;
+    const isCidPresent = p.filter((item) => item.includes("cid"));
+    if (!isCidPresent.length) return p;
   }
 });
 // console.log(countValidPassports);
+
+const validPassports = [
+  [
+    "ecl:gry",
+    "pid:860033327",
+    "eyr:2020",
+    "hcl:#fffffd",
+    "byr:1937",
+    "iyr:200",
+    "cid:147",
+    "hgt:183cm",
+  ],
+  [
+    "iyr:2013",
+    "ecl:amb",
+    "cid:350",
+    "eyr:2023",
+    "pid:028048884",
+    "hcl:#cfa07d",
+    "byr:1929",
+  ],
+  [
+    "hcl:#ae17e1",
+    "iyr:2013",
+    "eyr:2024",
+    "ecl:brn",
+    "pid:760753108",
+    "byr:1931",
+    "hgt:179cm",
+  ],
+  [
+    "hcl:#cfa07d",
+    "eyr:2025",
+    "pid:166559648",
+    "iyr:2011",
+    "ecl:brn",
+    "hgt:59in",
+  ],
+  [
+    "ecl:gry",
+    "pid:860033327",
+    "eyr:2020",
+    "hcl:#fffffd",
+    "byr:1937",
+    "iyr:2017",
+    "cid:147",
+    "hgt:183cm",
+  ],
+  [
+    "hcl:#ae17e1",
+    "iyr:2013",
+    "eyr:2024",
+    "ecl:brn",
+    "pid:760753108",
+    "byr:1931",
+    "hgt:179cm",
+  ],
+];
+
+// console.log("v", validPassports);
+const filtering = validPassports.filter((pass) => {
+  return pass.forEach((i) => {
+    // need to push good properties into an array, check the length
+    // if good properties === length of the passport (all are good), return true
+    const identifier = i.slice(0, 3);
+    const value = i.slice(4);
+    if (identifier === "ecl") {
+      return ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].includes(value);
+    }
+    if (identifier === "iyr") {
+      const year = Number(value);
+      if (value.length !== 4) {
+        return false;
+      }
+      return year >= 2010 && year <= 2020;
+    }
+    return false;
+  });
+});
+console.log(filtering);
+// function checkIdentifier() {
+//   switch(id) {
+//     case 'ecl':
+//     return
+//     break;
+//   }
+// }
