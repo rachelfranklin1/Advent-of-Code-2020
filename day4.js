@@ -22,4 +22,4 @@ const countValidPassports = passportList.filter((p) => {
     if (!isCidPresent.length) return p;
   }
 });
-console.log(countValidPassports);
+console.log(countValidPassports.length);
