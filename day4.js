@@ -26,7 +26,6 @@ const validPassports = passportList.filter((p) => {
 });
 // part 2
 const theMostValidPassportsOfAllThePassports = validPassports.filter((pass) => {
-  console.log("!!!!", validatePassports(pass));
   return validatePassports(pass);
 });
 
@@ -61,35 +60,27 @@ function validatePassports(passport) {
     const identifier = i.slice(0, 3);
     const value = i.slice(4);
     if (identifier === "ecl") {
-      console.log("ecl", value, validateEyeColor(value));
       return validateEyeColor(value);
     }
     if (identifier === "byr") {
-      console.log("byr", value, validateNumericData(value, 1920, 2002));
       return validateNumericData(value, 1920, 2002);
     }
     if (identifier === "iyr") {
-      console.log("iyr", value, validateNumericData(value, 2010, 2020));
       return validateNumericData(value, 2010, 2020);
     }
     if (identifier === "eyr") {
-      console.log("eyr", value, validateNumericData(value, 2020, 2030));
       return validateNumericData(value, 2020, 2030);
     }
     if (identifier === "hgt") {
-      console.log("hgt", value, validateHeight(value));
       return validateHeight(value);
     }
     if (identifier === "hcl") {
-      console.log("hcl", value, /^#\w{6}$/.test(value));
       return /^#\w{6}$/.test(value);
     }
     if (identifier === "pid") {
-      console.log("pid", value, /^[0-9]{9}$/.test(value));
       return /^[0-9]{9}$/.test(value);
     }
     if (identifier === "cid") {
-      console.log("cid", true);
       return true;
     }
     return false;
