@@ -37,5 +37,18 @@ function findColumn(col) {
   });
   return endPos;
 }
+// part 2
+const sortedSeatIds = listOfSeatIds.sort((a, b) => a - b);
+const minSeatNo = Math.min(...listOfSeatIds);
+const findMissingSeat = () => {
+  const missingSeat = [];
+  sortedSeatIds.reduce((acc, currentValue) => {
+    if (acc !== currentValue) {
+      missingSeat.push(acc);
+    }
+    return currentValue + 1;
+  }, minSeatNo);
+  return missingSeat;
+};
 
-console.log(Math.max(...listOfSeatIds));
+console.log(findMissingSeat());
