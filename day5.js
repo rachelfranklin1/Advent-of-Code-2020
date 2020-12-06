@@ -1,20 +1,15 @@
-const { start } = require("repl");
+let fs = require("fs");
+const data = fs.readFileSync("day5.txt").toString().split(/\/n$/);
+const getGroupedInfo = data[0].replace(/\n/g, ",");
+const getIndividualStrings = getGroupedInfo.split(",");
 
-const exampleData = ["BBFFBBFRLL", "BFFFBBFRRR", "FFFBBBFRRR"];
-// const exampleData = ["FBFBBFF"];
-// first 6 digits work out row
-// last three digits work out the column
-// seatID = row * 8 + column
-
-const listOfSeatIds = exampleData.map((item) => {
-  return {
-    row: findRow(item.slice(0, item.length - 3)),
-    col: findColumn(item.slice(item.length - 4)),
-    // seatId: row * 8 + col,
-  };
+const listOfSeatIds = getIndividualStrings.map((item) => {
+  const row = findRow(item.slice(0, item.length - 3));
+  const col = findColumn(item.slice(item.length - 3));
+  const seatId = row * 8 + col;
+  return seatId;
 });
 function findRow(rowCode) {
-  console.log(rowCode);
   let startPos = 0;
   let endPos = 128;
   const instructions = rowCode.split("");
@@ -35,14 +30,12 @@ function findColumn(col) {
   instructions.forEach((letter) => {
     const difference = (endPos - startPos) / 2;
     if (letter === "L") {
-      endPos -= difference;
+      endPos = Math.floor((endPos -= difference));
     } else {
-      startPos += difference;
+      startPos = Math.ceil((startPos += difference));
     }
   });
   return endPos;
 }
 
-// something is broken with L
-
-console.log(listOfSeatIds);
+console.log(Math.max(...listOfSeatIds));
