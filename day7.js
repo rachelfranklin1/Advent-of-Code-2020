@@ -37,3 +37,40 @@ function findSuitableBags() {
   const duplicateBagsRemoved = [...new Set(bags)];
   return duplicateBagsRemoved.length;
 }
+
+// part 2
+
+function countInternalBags() {
+  const getInitialBagInfo = formattedData.filter((item) => {
+    const bag = item.slice(0, item.indexOf(":"));
+    return bag.includes("shiny gold");
+  });
+  const initialBagDef = getInitialBagInfo[0].slice(
+    0,
+    getInitialBagInfo[0].indexOf(":")
+  );
+  const initialBagRules = getInitialBagInfo[0]
+    .slice(getInitialBagInfo[0].indexOf(":") + 1)
+    .split(",");
+  const numberOfInternalBags = []; // push initial values in here
+  console.log(initialBagRules);
+  for (i = 0; i < initialBagRules.length; i++) {
+    const indexOfBagCount = initialBagRules[i].search(/[0-9]/);
+    const bagCount = initialBagRules[i][indexOfBagCount];
+    numberOfInternalBags.push(bagCount);
+    for (j = 0; j < formattedData.length; j++) {
+      const bagDef = formattedData[j].slice(0, formattedData[j].indexOf(":"));
+      if (bagDef.includes(initialBagRules[i])) {
+        numberOfInternalBags.push(initialBagRules[i][indexOfBagCount]);
+      }
+    }
+  }
+  // break data into definition and rule (number, internalBag)
+  // def: shiny gold bag
+  // rule: contains 3 pink bags
+  // find entry with def, take the number and push into array
+  // search for internal bag as rule, take the number, push and begin search again with new internal bag
+  // console.log(formattedData);
+}
+
+console.log(countInternalBags());
